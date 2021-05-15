@@ -13,7 +13,7 @@ export class CreateProductDto {
   }
   
   export class UpdateProductDto {
-    readonly name?: string;
+    readonly name?: string;             //El ? quiere decir que el atributo es opcional
     readonly description?: string;
     readonly price?: number;
     readonly stock?: number;

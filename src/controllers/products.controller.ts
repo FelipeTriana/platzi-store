@@ -49,8 +49,14 @@ export class ProductsController {
     return this.productsService.findOne(productId);
   }
 
+
+  /**
+   * OJO: Al asigar a un body un tipo dto, si el atributo fue declarado en el dto como READONLY no podra ser modificado desde la funcion
+   * (por ejemplo, tomar datos del verifytoken y asignarlos al campo username del body)
+   * solo se podra asignar informacion desde que se envia la solicitud(postman)
+   */
   @Post()
-  create(@Body() payload: CreateProductDto) {
+  create(@Body() payload: CreateProductDto) {   //Cambiamos el body tipo any por el DTO con la informacion de validacion del body
     // return {
     //   message: 'accion de crear',
     //   payload,
