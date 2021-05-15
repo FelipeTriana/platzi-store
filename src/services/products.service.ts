@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';  //Se importa la excepcion
 
 import { Product } from './../entities/product.entity';
 
@@ -19,10 +19,14 @@ export class ProductsService {
   findAll() {
     return this.products;
   }
-
+/**
+ * throw lanza explicitamente un error en la TERMINAL pero no nos da informacion sobre el codigo de error ni en la terminal ni en postman.
+ * Nestjs nos ayuda a manejar los erroes con un kit de excepciones. Por ejemplo, NotFoundExcepcion se usa cuando lo solicitado no existe
+ * NotFoundException arroja un codigo de estado 404 y el mensaje personalizado en el json
+ */
   findOne(id: number) {
     const product = this.products.find((item) => item.id === id);
-    if (!product) {
+    if (!product) {                                                   //OJO: BUENA PRACTICA, TECNICA ERROR FIRST. Primero manejar el error
       throw new NotFoundException(`Product #${id} not found`);
     }
     return product;
