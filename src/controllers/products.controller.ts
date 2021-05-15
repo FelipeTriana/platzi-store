@@ -1,45 +1,71 @@
-import { Controller, Get, Post, Query, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Param,
+  Post,
+  Body,
+  Put,
+  Delete,
+  HttpStatus,
+  HttpCode,
+  Res,
+} from '@nestjs/common';
+
+import { Response } from 'express';
+
+import { ProductsService } from './../services/products.service'; //Importamos el servicio
 
 @Controller('products')
 export class ProductsController {
   /**
-   * Para obtener parámetros de la URL se puede usar el decorador @Params
+   * En el constructor se realiza la inyeccion de dependencias, dejando el servicio como un atributo de la clase
+   * @param productsService 
    */
+  constructor(private productsService: ProductsService) {}  
 
-  /*Esta ruta tendria problemas con la ruta dinamica que se encuentra inmediatamente despues, si tenemos rutas parecidas las NO dinamicas deben ir ANTES que 
-   las dinamicas. Si esta ruta estuviera debajo de products/:productId nunca podriamos acceder a ella*/
-  @Get('filter')
-  getProductFilter() {
-    return `yo soy un filter`;
-  }
-
-  @Get(':productId')
-  getProduct(@Param('productId') productId: string) {
-    return `product ${productId}`;
-  }
-
-   /**
-   * Parametros tipo Query
-   * Se usan para no enviar grandes conjuntos de parametros en un endpoint.
-   * La lista de query params empieza con un '?' y se concatenan entre si con un '&': api.example.com/products?region=USA&brand=adidas&sort=asc
-   * Ejemplo: Puede servir para un filtro donde obtengamos todos los productos de una region, una marca y un orden especifico 
-   */
   @Get()
   getProducts(
     @Query('limit') limit = 100,
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return `products limit=> ${limit} offset=> ${offset} brand=> ${brand}`;
-    //Acceder por ejemplo a: http://localhost:3000/products?limit=1000&offset=25&brand=ardidas     no importa el orden en que se envien los parametros
+    // return {
+    //   message: `products limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
+    // };
+    return this.productsService.findAll();
   }
 
-  @Post() // 👈 New decorator
-  create(@Body() payload: any) {
-    return {
-      message: 'accion de crear',
-      payload,
-    };
+  @Get('filter')
+  getProductFilter() {
+    return `yo soy un filter`;
   }
-  
+
+  @Get(':productId')
+  @HttpCode(HttpStatus.ACCEPTED)
+  getOne(@Param('productId') productId: string) {
+    // response.status(200).send({
+    //   message: `product ${productId}`,
+    // });
+    return this.productsService.findOne(+productId);  //Se usa el + en productId para hacer el parsing de string al tipo de parametro
+  }                                                   //declarado en la funcion
+
+  @Post()
+  create(@Body() payload: any) {
+    // return {
+    //   message: 'accion de crear',
+    //   payload,
+    // };
+    return this.productsService.create(payload);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() payload: any) {
+    return this.productsService.update(+id, payload);   //Se usa el + en id para hacer el parsing de string al tipo de parametro
+  }                                                     //de la funcion
+
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return id;
+  }
 }
