@@ -1,7 +1,7 @@
 /**
  * Instalar: npm i class-validator class-transformer @nestjs/mapped-types
  */
-
+ 
 import {
     IsString,
     IsNumber,
