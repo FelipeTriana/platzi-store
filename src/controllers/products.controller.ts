@@ -14,10 +14,11 @@ import {
   Put,
   Delete,
   HttpStatus,
-  HttpCode,
+  HttpCode, 
   Res,
-  ParseIntPipe,              //Se importa el pipe
+ // ParseIntPipe,              //Se importa el pipe de nestjs
 } from '@nestjs/common';
+import { ParseIntPipe } from '../common/parse-int.pipe'; //Podemos importar tambien nuestro propio pipe
 
 import { Response } from 'express';
 
